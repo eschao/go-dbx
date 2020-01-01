@@ -1,9 +1,5 @@
 package dbx
 
-import (
-	"reflect"
-)
-
 const (
 	USER_TABLE       = "user"
 	USER_LOGIN_TABLE = "user_login"
@@ -11,19 +7,11 @@ const (
 )
 
 type User struct {
-	Id         int64  `json:"id"          db:"id" column:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTOINCREMENT"`
-	Userid     string `json:"userid"      db:"userid" column:"userid"      sqlite:"TEXT NOT NULL"                     mysql:"varchar(32) NOT NULL"`
-	Nickname   string `json:"nickname"    db:"nickname" column:"nickname"    sqlite:"TEXT"                              mysql:"varchar(64) NOT NULL DEFAULT ''"`
-	Password   string `json:"password"    db:"password" column:"password"    sqlite:"TEXT"                              mysql:"varchar(32) NOT NULL DEFAULT ''"`
-	UpdateTime string `json:"update_time" db:"update_time" column:"update_time" sqlite:"INTEGER"                           mysql:"datetime NOT NULL DEFAULT '2000-01-01 00:00:00'"`
-}
-
-func (this *User) GetTableName() string {
-	return USER_TABLE
-}
-
-func (this User) GetRowType() reflect.Type {
-	return reflect.TypeOf(this)
+	Id         int64  `json:"id"          db:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTOINCREMENT"`
+	Userid     string `json:"userid"      db:"userid"      sqlite:"TEXT NOT NULL"                     mysql:"varchar(32) NOT NULL"`
+	Nickname   string `json:"nickname"    db:"nickname"    sqlite:"TEXT"                              mysql:"varchar(64) NOT NULL DEFAULT ''"`
+	Password   string `json:"password"    db:"password"    sqlite:"TEXT"                              mysql:"varchar(32) NOT NULL DEFAULT ''"`
+	UpdateTime string `json:"update_time" db:"update_time" sqlite:"INTEGER"                           mysql:"datetime NOT NULL DEFAULT '2000-01-01 00:00:00'"`
 }
 
 type UserLogin struct {
@@ -35,14 +23,6 @@ type UserLogin struct {
 	UpdateTime string `json:"update_time" column:"update_time" sqlite:"INTEGER"                           mysql:"datetime NOT NULL DEFAULT '2000-01-01 00:00:00'"`
 }
 
-func (this *UserLogin) GetTableName() string {
-	return USER_LOGIN_TABLE
-}
-
-func (this UserLogin) GetRowType() reflect.Type {
-	return reflect.TypeOf(this)
-}
-
 type UserOAuth struct {
 	Id         int64  `json:"id"          column:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTOINCREMENT"`
 	Userid     string `json:"userid"      column:"userid"      sqlite:"TEXT UNIQUE NOT NULL"              mysql:"varchar(32) NOT NULL UNIQUE"`
@@ -52,14 +32,6 @@ type UserOAuth struct {
 	Token      string `json:"token"       column:"token"       sqlite:"TEXT"                              mysql:"varchar(64) NOT NULL DEFAULT ''"`
 	ExpireTime string `json:"expire_time" column:"expire_time" sqlite:"INTEGER"                           mysql:"datetime NOT NULL DEFAULT '2000-01-01 00:00:00'"`
 	UpdateTime string `json:"update_time" column:"update_time" sqlite:"INTEGER"                           mysql:"datetime NOT NULL DEFAULT '2000-01-01 00:00:00'"`
-}
-
-func (this *UserOAuth) GetTableName() string {
-	return USER_OAUTH_TABLE
-}
-
-func (this UserOAuth) GetRowType() reflect.Type {
-	return reflect.TypeOf(this)
 }
 
 var TestUsers = []User{

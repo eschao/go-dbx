@@ -19,10 +19,10 @@ var DBLogger = func(sql string) {
 	fmt.Printf("SQL: %s\n", sql)
 }
 
-type ITable interface {
-	GetTableName() string
-	//GetRowType() reflect.Type
-}
+//type ITable interface {
+//GetTableName() string
+//GetRowType() reflect.Type
+//}
 
 type Column struct {
 	Name            string
@@ -62,19 +62,26 @@ func (this *Table) ColumnIndexes() []int {
 	return indexes
 }
 
-func (this *Table) Reflect(table ITable) error {
-	v := reflect.TypeOf(table).Elem()
+func (this *Table) Parse(name string, table interface{}) error {
+	v := reflect.TypeOf(table)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
 	if v.Kind() != reflect.Struct {
 		return fmt.Errorf("table is not a struct type: %v", v.Kind())
 	}
 
 	for i := 0; i < v.NumField(); i++ {
 		f := v.Field(i)
-		name := f.Tag.Get("column")
-		if name == "" {
-			name = f.Tag.Get("col")
+		col := f.Tag.Get("column")
+		if col == "" {
+			col = f.Tag.Get("col")
 		}
-		if name == "" {
+		if col == "" {
+			col = f.Tag.Get("db")
+		}
+		if col == "" {
 			continue
 		}
 
@@ -99,24 +106,24 @@ func (this *Table) Reflect(table ITable) error {
 			s := strings.ToLower(mysql)
 			if sqlite != "" && isPrimaryKey != strings.Contains(s, "primary key") {
 				return fmt.Errorf("column %s has different 'primary key' attribute",
-					name)
+					col)
 			}
 			if sqlite != "" && strings.Contains(s, "auto_increment") {
 				return fmt.Errorf("column %s has different 'auto-increment' attribute",
-					name)
+					col)
 			}
 		}
 
 		postgre := f.Tag.Get("postgre")
 		if sqlite == "" && mysql == "" && postgre == "" {
-			return fmt.Errorf("column %s does not have sql definition", name)
+			return fmt.Errorf("column %s does not have sql definition", col)
 		}
 
-		if _, ok := this.Columns[name]; ok {
-			return fmt.Errorf("column %s is redefined", name)
+		if _, ok := this.Columns[col]; ok {
+			return fmt.Errorf("column %s is redefined", col)
 		}
-		this.Columns[name] = Column{
-			name, i, sqlite, mysql, postgre, isPrimaryKey, isAutoIncrement,
+		this.Columns[col] = Column{
+			col, i, sqlite, mysql, postgre, isPrimaryKey, isAutoIncrement,
 		}
 	}
 
@@ -124,8 +131,7 @@ func (this *Table) Reflect(table ITable) error {
 		return fmt.Errorf("table doesn't have column definitions")
 	}
 
-	this.Name = table.GetTableName()
-	//this.RowType = table.GetRowType()
+	this.Name = name
 	return nil
 }
 
@@ -212,16 +218,16 @@ func (this *Database) OpenMySQL(dbName, user, passwd, host string, port int) err
 	return err
 }
 
-func (this *Database) Register(table ITable) error {
+func (this *Database) RegisterTable(name string, table interface{}) error {
 	t := Table{Columns: map[string]Column{}}
-	if err := t.Reflect(table); err != nil {
+	if err := t.Parse(name, table); err != nil {
 		return err
 	}
 
-	if _, ok := this.tables[t.Name]; ok {
-		return fmt.Errorf("%s table is already existing", t.Name)
+	if _, ok := this.tables[name]; ok {
+		return fmt.Errorf("%s table is already existing", name)
 	}
-	this.tables[t.Name] = t
+	this.tables[name] = t
 	return nil
 }
 

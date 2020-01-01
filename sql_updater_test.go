@@ -27,7 +27,7 @@ func TestUpdate(t *testing.T) {
 	user1.Nickname = "nickname1"
 	user1.Password = "password1"
 	user1.UpdateTime = "2019-02-01 00:00:00"
-	_, err = tDatabase.T(USER_TABLE).Update("id=?", user1.Id).With(&user1)
+	_, err = tDatabase.T(USER_TABLE).Update("id=?", user1.Id).Value(&user1)
 	assert.Nil(err)
 	// check updated row
 	user2 := User{}
@@ -35,15 +35,25 @@ func TestUpdate(t *testing.T) {
 		One(&user2))
 	assert.Equal(user1, user2)
 
-	// update some columns
+	// update some columns with row
 	user2.Password = "password2"
 	user2.UpdateTime = "2019-03-01 00:00:00"
 	_, err = tDatabase.T(USER_TABLE).Update("id=?", user2.Id).
-		Columns("password", "update_time").With(&user2)
+		Set("password", "update_time").Value(&user2)
 	assert.Nil(err)
 	// check updated row
 	user3 := User{}
 	assert.Nil(tDatabase.T(USER_TABLE).SelectAll().Filter("id=?", user2.Id).
 		One(&user3))
 	assert.Equal(user2, user3)
+
+	// update some columns with values
+	_, err = tDatabase.T(USER_TABLE).Update("id=?", user2.Id).
+		Set("password", "update_time").Values("password3", "2019-04-01 00:00:00")
+	assert.Nil(err)
+	user4 := User{}
+	assert.Nil(tDatabase.T(USER_TABLE).SelectAll().Filter("id=?", user2.Id).
+		One(&user4))
+	assert.Equal(user4.Password, "password3")
+	assert.Equal(user4.UpdateTime, "2019-04-01 00:00:00")
 }

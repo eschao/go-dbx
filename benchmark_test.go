@@ -177,7 +177,7 @@ func BenchmarkDbxUpdate(b *testing.B) {
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		t.Update("userid=?", u.Userid).
-			Columns("userid", "nickname", "password", "update_time").With(&u)
+			Set("userid", "nickname", "password", "update_time").Value(&u)
 	}
 }
 

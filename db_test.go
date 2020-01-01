@@ -50,13 +50,13 @@ func prepare() error {
 		return fmt.Errorf("Can't support database type: %s", tDBType)
 	}
 
-	if err := tDatabase.Register(&User{}); err != nil {
+	if err := tDatabase.RegisterTable(USER_TABLE, User{}); err != nil {
 		return fmt.Errorf("Can't register table: User. Error: %s", err.Error())
 	}
-	if err := tDatabase.Register(&UserLogin{}); err != nil {
+	if err := tDatabase.RegisterTable(USER_LOGIN_TABLE, &UserLogin{}); err != nil {
 		return fmt.Errorf("Can't register table: UserLogin. Error: %s", err.Error())
 	}
-	if err := tDatabase.Register(&UserOAuth{}); err != nil {
+	if err := tDatabase.RegisterTable(USER_OAUTH_TABLE, &UserOAuth{}); err != nil {
 		return fmt.Errorf("Can't register table: UserOAuth. Error: %s", err.Error())
 	}
 	return nil
