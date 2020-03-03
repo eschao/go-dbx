@@ -223,6 +223,30 @@ func (this *SQLSelector) One(row interface{}) error {
 	return rs.Scan(refs...)
 }
 
+// One selects one row from table
+func (this *SQLSelector) Values(values ...interface{}) error {
+	if this.err != nil {
+		return this.err
+	}
+
+	m := len(this.columns)
+	n := len(values)
+	if m != n {
+		return fmt.Errorf("selected %d columns, but only has %d values",
+			m, n)
+
+	}
+
+	q := this.buildSQL()
+	var rs *sql.Row
+	if this.tx != nil {
+		rs = this.tx.QueryRow(q, this.filter.args...)
+	} else {
+		rs = this.db.QueryRow(q, this.filter.args...)
+	}
+	return rs.Scan(values...)
+}
+
 // All selects all rows from table
 func (this *SQLSelector) All(rows interface{}) error {
 	if this.err != nil {
