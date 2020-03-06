@@ -108,7 +108,7 @@ func (this *Table) Parse(name string, table interface{}) error {
 				return fmt.Errorf("column %s has different 'primary key' attribute",
 					col)
 			}
-			if sqlite != "" && strings.Contains(s, "auto_increment") {
+			if sqlite != "" && isAutoIncrement != strings.Contains(s, "auto_increment") {
 				return fmt.Errorf("column %s has different 'auto-increment' attribute",
 					col)
 			}
