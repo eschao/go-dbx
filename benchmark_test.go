@@ -10,7 +10,7 @@ import (
 // go test -run=XXX -bench=.
 
 func BenchmarkRawInsert(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 
@@ -26,7 +26,7 @@ func BenchmarkRawInsert(b *testing.B) {
 }
 
 func BenchmarkDbxInsert(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 
@@ -38,7 +38,7 @@ func BenchmarkDbxInsert(b *testing.B) {
 }
 
 func BenchmarkRawSelectRow(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	tDatabase.T(USER_TABLE).Insert(&TestUsers[0])
@@ -54,7 +54,7 @@ func BenchmarkRawSelectRow(b *testing.B) {
 }
 
 func BenchmarkDbxSelectRow(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	tDatabase.T(USER_TABLE).Insert(&TestUsers[0])
@@ -68,7 +68,7 @@ func BenchmarkDbxSelectRow(b *testing.B) {
 }
 
 func BenchmarkSqlxSelectRow(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	tDatabase.T(USER_TABLE).Insert(&TestUsers[0])
@@ -89,7 +89,7 @@ func BenchmarkSqlxSelectRow(b *testing.B) {
 }
 
 func BenchmarkRawSelectRows(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	for i := 0; i < 20; i++ {
@@ -112,7 +112,7 @@ func BenchmarkRawSelectRows(b *testing.B) {
 }
 
 func BenchmarkDbxSelectRows(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	for i := 0; i < 20; i++ {
@@ -128,7 +128,7 @@ func BenchmarkDbxSelectRows(b *testing.B) {
 }
 
 func BenchmarkSqlxSelectRows(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	for i := 0; i < 20; i++ {
@@ -150,7 +150,7 @@ func BenchmarkSqlxSelectRows(b *testing.B) {
 }
 
 func BenchmarkRawUpdate(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	tDatabase.T(USER_TABLE).Insert(&TestUsers[0])
@@ -166,7 +166,7 @@ func BenchmarkRawUpdate(b *testing.B) {
 }
 
 func BenchmarkDbxUpdate(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	tDatabase.T(USER_TABLE).Insert(&TestUsers[0])
@@ -182,7 +182,7 @@ func BenchmarkDbxUpdate(b *testing.B) {
 }
 
 func BenchmarkRawInnerJoin(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	tDatabase.CreateTable(USER_LOGIN_TABLE)
@@ -208,7 +208,7 @@ func BenchmarkRawInnerJoin(b *testing.B) {
 }
 
 func BenchmarkDbxInnerJoin(b *testing.B) {
-	DBLogger = nil
+	dbLogger = nil
 	tDatabase.DropTable(USER_TABLE)
 	tDatabase.CreateTable(USER_TABLE)
 	tDatabase.CreateTable(USER_LOGIN_TABLE)

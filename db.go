@@ -15,8 +15,12 @@ const (
 	DRIVER_POSTGRE = "postgre"
 )
 
-var DBLogger = func(sql string) {
+var dbLogger = func(sql string) {
 	fmt.Printf("SQL: %s\n", sql)
+}
+
+func SetLogger(logger func(string)) {
+	dbLogger = logger
 }
 
 //type ITable interface {
@@ -241,8 +245,8 @@ func (this *Database) CreateTables() error {
 		if err != nil {
 			return err
 		}
-		if DBLogger != nil {
-			DBLogger(sql)
+		if dbLogger != nil {
+			dbLogger(sql)
 		}
 
 		if _, err := this.db.Exec(sql); err != nil {
@@ -265,8 +269,8 @@ func (this *Database) CreateTable(name string) error {
 	if err != nil {
 		return err
 	}
-	if DBLogger != nil {
-		DBLogger(sql)
+	if dbLogger != nil {
+		dbLogger(sql)
 	}
 
 	_, err = this.db.Exec(sql)

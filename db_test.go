@@ -66,6 +66,11 @@ func cleanUp() {
 	tDatabase.Close()
 }
 
+var _ = func() bool {
+	testing.Init()
+	return true
+}()
+
 func TestMain(m *testing.M) {
 	err := prepare()
 	if err != nil {

@@ -180,8 +180,8 @@ func (this *SQLSelector) buildSQL() string {
 		q += " OFFSET " + strconv.Itoa(this.offset)
 	}
 
-	if DBLogger != nil {
-		DBLogger(q)
+	if dbLogger != nil {
+		dbLogger(q)
 	}
 	return q
 }

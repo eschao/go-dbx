@@ -206,8 +206,8 @@ func (this *SQLJointer) buildJoinSQL() (string, *[][]int, int, error) {
 		sql += " OFFSET " + strconv.Itoa(selector.offset)
 	}
 
-	if DBLogger != nil {
-		DBLogger(sql)
+	if dbLogger != nil {
+		dbLogger(sql)
 	}
 
 	return sql, &indexes, count, nil

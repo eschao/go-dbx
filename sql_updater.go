@@ -54,8 +54,8 @@ func (this *SQLUpdater) Values(values ...interface{}) (sql.Result, error) {
 		q += " WHERE " + this.filter.where
 		values = append(values, this.filter.args...)
 	}
-	if DBLogger != nil {
-		DBLogger(q)
+	if dbLogger != nil {
+		dbLogger(q)
 	}
 
 	if this.tx != nil {
@@ -102,8 +102,8 @@ func (this *SQLUpdater) Value(row interface{}) (sql.Result, error) {
 		q += " WHERE " + this.filter.where
 		vals = append(vals, this.filter.args...)
 	}
-	if DBLogger != nil {
-		DBLogger(q)
+	if dbLogger != nil {
+		dbLogger(q)
 	}
 
 	if this.tx != nil {

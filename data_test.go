@@ -7,7 +7,7 @@ const (
 )
 
 type User struct {
-	Id         int64  `json:"id"          db:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTOINCREMENT"`
+	Id         int64  `json:"id"          db:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTO_INCREMENT"`
 	Userid     string `json:"userid"      db:"userid"      sqlite:"TEXT NOT NULL"                     mysql:"varchar(32) NOT NULL"`
 	Nickname   string `json:"nickname"    db:"nickname"    sqlite:"TEXT"                              mysql:"varchar(64) NOT NULL DEFAULT ''"`
 	Password   string `json:"password"    db:"password"    sqlite:"TEXT"                              mysql:"varchar(32) NOT NULL DEFAULT ''"`
@@ -15,7 +15,7 @@ type User struct {
 }
 
 type UserLogin struct {
-	Id         int64  `json:"id"          column:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTOINCREMENT"`
+	Id         int64  `json:"id"          column:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTO_INCREMENT"`
 	Userid     string `json:"userid"      column:"userid"      sqlite:"TEXT UNIQUE NOT NULL"              mysql:"varchar(32) NOT NULL UNIQUE"`
 	OAuthId    string `json:"oauth_id"    column:"oauth_id"    sqlite:"TEXT UNIQUE NOT NULL"              mysql:"varchar(64) NOT NULL UNIQUE DEFAULT ''"`
 	LastLogin  string `json:"last_login"  column:"last_login"  sqlite:"INTEGER"                           mysql:"datetime NOT NULL DEFAULT '2000-01-01 00:00:00'"`
@@ -24,7 +24,7 @@ type UserLogin struct {
 }
 
 type UserOAuth struct {
-	Id         int64  `json:"id"          column:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTOINCREMENT"`
+	Id         int64  `json:"id"          column:"id"          sqlite:"INTEGER PRIMARY KEY AUTOINCREMENT" mysql:"int NOT NULL PRIMARY KEY AUTO_INCREMENT"`
 	Userid     string `json:"userid"      column:"userid"      sqlite:"TEXT UNIQUE NOT NULL"              mysql:"varchar(32) NOT NULL UNIQUE"`
 	OAuthId    string `json:"oauth_id"    column:"oauth_id"    sqlite:"TEXT UNIQUE NOT NULL"              mysql:"varchar(64) NOT NULL UNIQUE"`
 	App        string `json:"app"         column:"app"         sqlite:"TEXT"                              mysql:"varchar(16) NOT NULL DAEFAULT ''"`

@@ -49,8 +49,8 @@ func (this *SQLExecutor) Insert(row interface{}) (sql.Result, error) {
 	cols = cols[:len(cols)-1]
 	vals = vals[:len(vals)-1]
 	q := "INSERT INTO " + this.table.Name + "(" + cols + ") VALUES(" + vals + ")"
-	if DBLogger != nil {
-		DBLogger(q)
+	if dbLogger != nil {
+		dbLogger(q)
 	}
 
 	var stmt *sql.Stmt
@@ -74,8 +74,8 @@ func (this *SQLExecutor) CountAll() (int, error) {
 	}
 
 	q := "SELECT COUNT(*) as count FROM " + this.table.Name
-	if DBLogger != nil {
-		DBLogger(q)
+	if dbLogger != nil {
+		dbLogger(q)
 	}
 
 	var rs *sql.Rows
@@ -113,8 +113,8 @@ func (this *SQLExecutor) Count(where string, args ...interface{}) (int, error) {
 	if where != "" {
 		q += " WHERE " + where
 	}
-	if DBLogger != nil {
-		DBLogger(q)
+	if dbLogger != nil {
+		dbLogger(q)
 	}
 
 	var rs *sql.Rows
@@ -173,8 +173,8 @@ func (this *SQLExecutor) Delete(where string, args ...interface{}) error {
 	if where != "" {
 		q += " WHERE " + where
 	}
-	if DBLogger != nil {
-		DBLogger(q)
+	if dbLogger != nil {
+		dbLogger(q)
 	}
 
 	var err error
@@ -207,8 +207,8 @@ func (this *SQLExecutor) Replace(row interface{}) (sql.Result, error) {
 	cols = cols[:len(cols)-1]
 	vals = vals[:len(vals)-1]
 	q := "REPLACE INTO " + this.table.Name + "(" + cols + ") VALUES(" + vals + ")"
-	if DBLogger != nil {
-		DBLogger(q)
+	if dbLogger != nil {
+		dbLogger(q)
 	}
 
 	var stmt *sql.Stmt
