@@ -3,6 +3,7 @@ package dbx
 import (
 	"database/sql"
 	"fmt"
+	"net/http"
 	"reflect"
 	"strings"
 
@@ -13,6 +14,10 @@ const (
 	DRIVER_SQLITE3 = "sqlite3"
 	DRIVER_MYSQL   = "mysql"
 	DRIVER_POSTGRE = "postgre"
+)
+
+const (
+	defaultMaxMemory = 32 << 20 // 32 MB
 )
 
 var dbLogger = func(sql string) {
@@ -30,6 +35,7 @@ func SetLogger(logger func(string)) {
 
 type Column struct {
 	Name            string
+	FormName        string
 	Index           int
 	Sqlite          string
 	Mysql           string
@@ -66,6 +72,29 @@ func (this *Table) ColumnIndexes() []int {
 	return indexes
 }
 
+func (this *Table) GetColumnsFromForm(r *http.Request) (
+	[]string, []string, error) {
+	columns := []string{}
+	values := []string{}
+	if err := r.ParseMultipartForm(defaultMaxMemory); err != nil {
+		return columns, values, err
+	}
+
+	for _, c := range this.Columns {
+		name := c.FormName
+		if name == "" {
+			name = c.Name
+		}
+
+		vs, ok := r.Form[name]
+		if ok && len(vs) > 0 {
+			columns = append(columns, name)
+			values = append(values, vs[0])
+		}
+	}
+	return columns, values, nil
+}
+
 func (this *Table) Parse(name string, table interface{}) error {
 	v := reflect.TypeOf(table)
 	if v.Kind() == reflect.Ptr {
@@ -88,6 +117,9 @@ func (this *Table) Parse(name string, table interface{}) error {
 		if col == "" {
 			continue
 		}
+
+		// get form id defined
+		form := f.Tag.Get("form")
 
 		isPrimaryKey := false
 		isAutoIncrement := false
@@ -127,7 +159,7 @@ func (this *Table) Parse(name string, table interface{}) error {
 			return fmt.Errorf("column %s is redefined", col)
 		}
 		this.Columns[col] = Column{
-			col, i, sqlite, mysql, postgre, isPrimaryKey, isAutoIncrement,
+			col, form, i, sqlite, mysql, postgre, isPrimaryKey, isAutoIncrement,
 		}
 	}
 
