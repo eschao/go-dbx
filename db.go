@@ -267,6 +267,14 @@ func (this *Database) RegisterTable(name string, table interface{}) error {
 	return nil
 }
 
+func (this *Database) GetTableSchema(name string) (Table, error) {
+	table, ok := this.tables[name]
+	if ok {
+		return table, nil
+	}
+	return Table{}, nil
+}
+
 func (this *Database) CreateTables() error {
 	if this.db == nil {
 		return fmt.Errorf("no opened database")
