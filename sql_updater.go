@@ -65,6 +65,42 @@ func (this *SQLUpdater) Values(values ...interface{}) (sql.Result, error) {
 	}
 }
 
+func (this *SQLUpdater) ValueMap(valMap map[string]interface{}) (
+	sql.Result, error) {
+	if this.err != nil {
+		return nil, this.err
+	}
+
+	n := len(valMap)
+	if n < 1 {
+		return nil, fmt.Errorf("please specify columns to update")
+	}
+
+	i := 0
+	cols := ""
+	vals := make([]interface{}, n)
+	for col, val := range valMap {
+		cols += col + "=?,"
+		vals[i] = val
+		i += 1
+	}
+	cols = cols[:len(cols)-1]
+	q := "UPDATE " + this.table.Name + " SET " + cols
+	if this.filter.where != "" {
+		q += " WHERE " + this.filter.where
+		vals = append(vals, this.filter.args...)
+	}
+	if dbLogger != nil {
+		dbLogger(q)
+	}
+
+	if this.tx != nil {
+		return this.tx.Exec(q, vals...)
+	} else {
+		return this.db.Exec(q, vals...)
+	}
+}
+
 // Value updates given row to table
 func (this *SQLUpdater) Value(row interface{}) (sql.Result, error) {
 	if this.err != nil {

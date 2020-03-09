@@ -73,9 +73,9 @@ func (this *Table) ColumnIndexes() []int {
 }
 
 func (this *Table) GetColumnsFromForm(r *http.Request) (
-	[]string, []string, error) {
+	[]string, []interface{}, error) {
 	columns := []string{}
-	values := []string{}
+	values := []interface{}{}
 	if err := r.ParseMultipartForm(defaultMaxMemory); err != nil {
 		return columns, values, err
 	}
@@ -93,6 +93,27 @@ func (this *Table) GetColumnsFromForm(r *http.Request) (
 		}
 	}
 	return columns, values, nil
+}
+
+func (this *Table) GetColumnsMapFromForm(r *http.Request) (
+	map[string]interface{}, error) {
+	columns := map[string]interface{}{}
+	if err := r.ParseMultipartForm(defaultMaxMemory); err != nil {
+		return columns, err
+	}
+
+	for _, c := range this.Columns {
+		name := c.FormName
+		if name == "" {
+			name = c.Name
+		}
+
+		vs, ok := r.Form[name]
+		if ok && len(vs) > 0 {
+			columns[name] = vs[0]
+		}
+	}
+	return columns, nil
 }
 
 func (this *Table) Parse(name string, table interface{}) error {

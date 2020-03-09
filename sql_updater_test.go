@@ -56,4 +56,17 @@ func TestUpdate(t *testing.T) {
 		One(&user4))
 	assert.Equal(user4.Password, "password3")
 	assert.Equal(user4.UpdateTime, "2019-04-01 00:00:00")
+
+	// update with value map
+	valueMap := map[string]interface{}{
+		"password":    "password4",
+		"update_time": "2019-05-01 00:00:00",
+	}
+	_, err = tDatabase.T(USER_TABLE).Update("id=?", user2.Id).ValueMap(valueMap)
+	assert.Nil(err)
+	user5 := User{}
+	assert.Nil(tDatabase.T(USER_TABLE).SelectAll().Filter("id=?", user2.Id).
+		One(&user5))
+	assert.Equal(user5.Password, "password4")
+	assert.Equal(user5.UpdateTime, "2019-05-01 00:00:00")
 }
