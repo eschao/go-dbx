@@ -13,6 +13,7 @@ type sqlJoin struct {
 	table   string
 	onLeft  string
 	onRight string
+	where   string
 	columns []string
 }
 
@@ -35,6 +36,16 @@ func (f jointer) Select(cols ...string) *SQLJointer {
 	}
 	jointer.joins = append(jointer.joins, *join)
 	return jointer
+}
+
+func (f jointer) Filter(where string) *SQLJointer {
+	jointer, join := f()
+	if where != "" {
+		join.where = where
+	}
+	jointer.joins = append(jointer.joins, *join)
+	return jointer
+
 }
 
 type joinColumns struct {
@@ -188,6 +199,10 @@ func (this *SQLJointer) buildJoinSQL() (string, *[][]int, int, error) {
 		} else {
 			joinSQL = "(" + joinSQL + ")" + join.op + join.table + " ON " +
 				leftmost + "." + join.onLeft + "=" + join.table + "." + join.onRight
+		}
+
+		if join.where != "" {
+			joinSQL += " " + join.where
 		}
 	}
 
