@@ -38,16 +38,6 @@ func (f jointer) Select(cols ...string) *SQLJointer {
 	return jointer
 }
 
-func (f jointer) Filter(where string) *SQLJointer {
-	jointer, join := f()
-	if where != "" {
-		join.where = where
-	}
-	jointer.joins = append(jointer.joins, *join)
-	return jointer
-
-}
-
 type joinColumns struct {
 	columns string
 	indexes []int
@@ -91,11 +81,13 @@ func (this *SQLJointer) Offset(n int) *SQLJointer {
 	return this
 }
 
-func (this *SQLJointer) LeftJoin(table, onLeft, onRight string) jointer {
+func (this *SQLJointer) LeftJoin(
+	table, onLeft, onRight, onWhere string,
+) jointer {
 	return func() (*SQLJointer, *sqlJoin) {
 		return this, &sqlJoin{
 			op: " LEFT JOIN ", table: table, onLeft: onLeft, onRight: onRight,
-			columns: []string{},
+			where: onWhere, columns: []string{},
 		}
 	}
 }
@@ -109,11 +101,13 @@ func (this *SQLJointer) LeftOuterJoin(table, onLeft, onRight string) jointer {
 	}
 }
 
-func (this *SQLJointer) RightJoin(table, onLeft, onRight string) jointer {
+func (this *SQLJointer) RightJoin(
+	table, onLeft, onRight, onWhere string,
+) jointer {
 	return func() (*SQLJointer, *sqlJoin) {
 		return this, &sqlJoin{
 			op: " RIGHT JOIN ", table: table, onLeft: onLeft, onRight: onRight,
-			columns: []string{},
+			where: onWhere, columns: []string{},
 		}
 	}
 }
